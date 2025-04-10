@@ -72,15 +72,15 @@ export function PromptCard({ prompt }: PromptCardProps) {
         className="h-full flex flex-col hover:shadow-md transition-all duration-200 cursor-pointer border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
         onClick={() => setIsOpen(true)}
       >
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start gap-2">
-            <CardTitle className="text-lg leading-tight line-clamp-2">{prompt.frontmatter.title}</CardTitle>
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xs font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
+        <CardHeader className="pb-2 sm:pb-2">
+          <div className="flex flex-wrap sm:flex-nowrap justify-between items-start gap-2">
+            <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 order-1">{prompt.frontmatter.title}</CardTitle>
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xs font-medium text-neutral-600 dark:text-neutral-300 shrink-0 order-2 sm:order-2">
               <Folder className="h-3 w-3" />
-              {prompt.frontmatter.category}
+              <span className="truncate max-w-[100px]">{prompt.frontmatter.category}</span>
             </span>
           </div>
-          <CardDescription className="flex items-center gap-1 mt-1">
+          <CardDescription className="flex items-center gap-1 mt-1 text-xs sm:text-sm">
             By {prompt.frontmatter.authorLink ? (
               <a
                 href={prompt.frontmatter.authorLink}
@@ -99,8 +99,8 @@ export function PromptCard({ prompt }: PromptCardProps) {
         </CardHeader>
 
         <CardContent className="flex-grow pt-0">
-          <div className="prose dark:prose-invert prose-sm max-h-32 overflow-hidden relative mb-2">
-            <div dangerouslySetInnerHTML={{ __html: prompt.html }} className="text-neutral-700 dark:text-neutral-300" />
+          <div className="prose dark:prose-invert prose-sm max-h-28 sm:max-h-32 overflow-hidden relative mb-2">
+            <div dangerouslySetInnerHTML={{ __html: prompt.html }} className="text-sm text-neutral-700 dark:text-neutral-300" />
             <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-neutral-950 to-transparent"></div>
           </div>
 
@@ -121,9 +121,9 @@ export function PromptCard({ prompt }: PromptCardProps) {
           </div>
         </CardContent>
 
-        <CardFooter className="pt-1 pb-3 px-4 border-t border-neutral-100 dark:border-neutral-800 mt-auto">
-          <div className="flex items-center justify-between gap-2 w-full">
-            <div className="flex items-center gap-1.5">
+        <CardFooter className="pt-1 pb-3 px-3 sm:px-4 border-t border-neutral-100 dark:border-neutral-800 mt-auto">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 w-full">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               <Button
                 variant="ghost"
                 size="icon"
@@ -136,7 +136,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
 
               <Select onValueChange={(value) => handleAction(value)}>
                 <SelectTrigger
-                  className="h-7 w-auto min-w-[110px] text-xs rounded-full px-2.5 bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800"
+                  className="h-7 w-auto min-w-[90px] sm:min-w-[110px] text-xs rounded-full px-2 sm:px-2.5 bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <SelectValue placeholder="Open in..." />
@@ -164,11 +164,11 @@ export function PromptCard({ prompt }: PromptCardProps) {
 
       {/* Full prompt modal dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl w-[calc(100%-2rem)] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex flex-col gap-2">
-              <DialogTitle className="text-xl">{prompt.frontmatter.title}</DialogTitle>
-              <div className="flex items-center justify-between gap-2">
+              <DialogTitle className="text-lg sm:text-xl">{prompt.frontmatter.title}</DialogTitle>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <DialogDescription className="flex items-center gap-1">
                   By {prompt.frontmatter.authorLink ? (
                     <a
@@ -184,7 +184,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
                     prompt.frontmatter.author
                   )}
                 </DialogDescription>
-                <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-300 self-start sm:self-auto">
                   <Folder className="h-3.5 w-3.5" />
                   {prompt.frontmatter.category}
                 </div>
@@ -193,32 +193,32 @@ export function PromptCard({ prompt }: PromptCardProps) {
           </DialogHeader>
 
           {/* Updated content display area */}
-          <div className="my-5">
+          <div className="my-4 sm:my-5">
             {/* Display raw formatted prompt with proper whitespace and line breaks */}
-            <pre className="whitespace-pre-wrap bg-neutral-50 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-sm font-mono overflow-x-auto">
+            <pre className="whitespace-pre-wrap bg-neutral-50 dark:bg-neutral-900 p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm font-mono overflow-x-auto">
               {prompt.content}
             </pre>
           </div>
 
           <div className="flex flex-wrap gap-1.5 mb-4">
-            <div className="w-full text-sm text-neutral-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
+            <div className="w-full text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
               <Tag className="h-3.5 w-3.5" />
               Tags:
             </div>
             {prompt.frontmatter.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+                className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs sm:text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          <DialogFooter className="flex items-center flex-wrap gap-3 border-t dark:border-neutral-800 pt-4">
-            <div className="flex items-center gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row items-stretch sm:items-center flex-wrap gap-3 border-t dark:border-neutral-800 pt-4">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Select onValueChange={handleAction}>
-                <SelectTrigger className="w-[180px] rounded-md bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
+                <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-md bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
                   <SelectValue placeholder="Open in..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -230,7 +230,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
               <Button
                 variant="outline"
                 size="icon"
-                className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800"
+                className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 h-9 w-9"
                 onClick={copyToClipboard}
                 title="Copy to clipboard"
               >
