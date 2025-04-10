@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply bg-earth-50 dark:bg-earth-900;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 20 6% 10%;
+    --card: 40 33% 98%;
+    --card-foreground: 20 6% 10%;
+    --popover: 40 33% 98%;
+    --popover-foreground: 20 6% 10%;
+    --primary: 27 56% 40%;
+    --primary-foreground: 40 33% 98%;
+    --secondary: 35 25% 90%;
+    --secondary-foreground: 20 6% 10%;
+    --muted: 35 25% 90%;
+    --muted-foreground: 20 6% 45%;
+    --accent: 35 25% 90%;
+    --accent-foreground: 20 6% 10%;
+    --destructive: 0 62.8% 40.6%;
+    --destructive-foreground: 40 33% 98%;
+    --border: 35 25% 85%;
+    --input: 35 25% 85%;
+    --ring: 27 56% 40%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 12% 8%;
+    --foreground: 35 25% 90%;
+    --card: 20 12% 8%;
+    --card-foreground: 35 25% 90%;
+    --popover: 20 12% 8%;
+    --popover-foreground: 35 25% 90%;
+    --primary: 27 56% 50%;
+    --primary-foreground: 20 12% 8%;
+    --secondary: 20 12% 16%;
+    --secondary-foreground: 35 25% 90%;
+    --muted: 20 12% 16%;
+    --muted-foreground: 35 25% 60%;
+    --accent: 20 12% 16%;
+    --accent-foreground: 35 25% 90%;
+    --destructive: 0 62.8% 40.6%;
+    --destructive-foreground: 35 25% 90%;
+    --border: 20 12% 16%;
+    --input: 20 12% 16%;
+    --ring: 27 56% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
