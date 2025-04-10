@@ -192,8 +192,12 @@ export function PromptCard({ prompt }: PromptCardProps) {
             </div>
           </DialogHeader>
 
-          <div className="prose dark:prose-invert my-5 overflow-auto">
-            <div dangerouslySetInnerHTML={{ __html: prompt.html }} />
+          {/* Updated content display area */}
+          <div className="my-5">
+            {/* Display raw formatted prompt with proper whitespace and line breaks */}
+            <pre className="whitespace-pre-wrap bg-neutral-50 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-sm font-mono overflow-x-auto">
+              {prompt.content}
+            </pre>
           </div>
 
           <div className="flex flex-wrap gap-1.5 mb-4">
