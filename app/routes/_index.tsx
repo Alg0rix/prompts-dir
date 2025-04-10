@@ -15,8 +15,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader() {
-  const prompts = await getAllPrompts();
+export async function loader({ context, request }: { context: any, request: Request }) {
+  const prompts = await getAllPrompts(context.env, request);
   const tags = getAllTags(prompts);
   const categories = getAllCategories(prompts);
 
