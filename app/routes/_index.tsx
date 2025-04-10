@@ -223,14 +223,14 @@ export default function Index() {
 
         {/* Mobile Tag Filter Dialog */}
         <Dialog open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-          <DialogContent className="!p-0 !max-w-lg sm:!max-w-xl !translate-y-0 !top-auto !bottom-0 !rounded-b-none">
-            <div className="p-4 pb-6">
-              <div className="flex items-center justify-between mb-5 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-                <DialogTitle className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
-                  Filter Prompts
-                </DialogTitle>
-              </div>
+          <DialogContent className="!p-0 !max-w-lg sm:!max-w-xl !translate-y-0 !top-auto !bottom-0 !rounded-b-none flex flex-col max-h-[80vh]">
+            <div className="p-4 flex-shrink-0 border-b border-neutral-200 dark:border-neutral-800">
+              <DialogTitle className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
+                Filter Prompts
+              </DialogTitle>
+            </div>
 
+            <div className="p-4 overflow-y-auto flex-grow">
               <div className="space-y-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
@@ -261,8 +261,10 @@ export default function Index() {
                   </div>
                 )}
               </div>
+            </div>
 
-              <div className="flex gap-3 mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+            <div className="p-4 flex-shrink-0 border-t border-neutral-200 dark:border-neutral-800">
+              <div className="flex gap-3">
                 <button
                   onClick={() => {
                     setSelectedTag(null);
@@ -285,15 +287,15 @@ export default function Index() {
 
         {/* Mobile Categories Dialog */}
         <Dialog open={mobileCategoriesOpen} onOpenChange={setMobileCategoriesOpen}>
-          <DialogContent className="!p-0 !max-w-lg sm:!max-w-xl !translate-y-0 !top-auto !bottom-0 !rounded-b-none">
-            <div className="p-4 pb-6">
-              <div className="flex items-center justify-between mb-5 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-                <DialogTitle className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
-                  Categories
-                </DialogTitle>
-              </div>
+          <DialogContent className="!p-0 !max-w-lg sm:!max-w-xl !translate-y-0 !top-auto !bottom-0 !rounded-b-none flex flex-col max-h-[80vh]">
+            <div className="p-4 flex-shrink-0 border-b border-neutral-200 dark:border-neutral-800">
+              <DialogTitle className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
+                Categories
+              </DialogTitle>
+            </div>
 
-              <div className="space-y-1 pb-4">
+            <div className="overflow-y-auto flex-grow p-4">
+              <div className="space-y-1">
                 <button
                   onClick={() => {
                     setSelectedCategory(null);

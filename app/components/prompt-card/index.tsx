@@ -164,8 +164,8 @@ export function PromptCard({ prompt }: PromptCardProps) {
 
       {/* Full prompt modal dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl w-[calc(100%-2rem)] max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl w-[calc(100%-2rem)] max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <div className="flex flex-col gap-2">
               <DialogTitle className="text-lg sm:text-xl">{prompt.frontmatter.title}</DialogTitle>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -192,30 +192,32 @@ export function PromptCard({ prompt }: PromptCardProps) {
             </div>
           </DialogHeader>
 
-          {/* Updated content display area */}
-          <div className="my-4 sm:my-5">
-            {/* Display raw formatted prompt with proper whitespace and line breaks */}
-            <pre className="whitespace-pre-wrap bg-neutral-50 dark:bg-neutral-900 p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm font-mono overflow-x-auto">
-              {prompt.content}
-            </pre>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            <div className="w-full text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
-              <Tag className="h-3.5 w-3.5" />
-              Tags:
+          {/* Scrollable content area */}
+          <div className="flex-grow overflow-y-auto py-2">
+            <div className="mb-4 sm:mb-5">
+              {/* Display raw formatted prompt with proper whitespace and line breaks */}
+              <pre className="whitespace-pre-wrap bg-neutral-50 dark:bg-neutral-900 p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs sm:text-sm font-mono overflow-x-auto">
+                {prompt.content}
+              </pre>
             </div>
-            {prompt.frontmatter.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs sm:text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
-              >
-                {tag}
-              </span>
-            ))}
+
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              <div className="w-full text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
+                <Tag className="h-3.5 w-3.5" />
+                Tags:
+              </div>
+              {prompt.frontmatter.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs sm:text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <DialogFooter className="flex flex-col sm:flex-row items-stretch sm:items-center flex-wrap gap-3 border-t dark:border-neutral-800 pt-4">
+          <DialogFooter className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center flex-wrap gap-3 border-t dark:border-neutral-800 pt-4">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Select onValueChange={handleAction}>
                 <SelectTrigger className="w-full sm:w-[180px] h-9 rounded-md bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800">
