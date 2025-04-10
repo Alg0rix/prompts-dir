@@ -4,7 +4,7 @@ A simple, static web application to browse, search, and discover a curated colle
 
 ## Overview
 
-This application provides a platform for users to find useful prompts for various tasks. All prompts are stored as Markdown files, making it easy to contribute new prompts via GitHub.
+This application provides a platform for users to find useful prompts for various tasks. All prompts are stored in a single CSV file in the public directory, making it easy to access and contribute to the collection.
 
 ## Features
 
@@ -13,7 +13,8 @@ This application provides a platform for users to find useful prompts for variou
 - **Author Links**: Clickable author links to promote attribution and discovery
 - **Search Functionality**: Client-side search to filter prompts by title, content, or author
 - **Tag Filtering**: Filter prompts by category/tag
-- **Static Content**: All prompt data is stored in Markdown files
+- **CSV-Based Storage**: All prompt data is stored in a single CSV file for easy access
+- **Public Directory**: CSV file is placed in the public directory for direct access via Cloudflare Pages
 - **GitHub Contribution**: Users can contribute new prompts by submitting Pull Requests
 
 ## Getting Started
@@ -44,25 +45,14 @@ The application will be available at http://localhost:3000.
 ### Adding a New Prompt
 
 1. Fork this repository
-2. Create a new Markdown file in the `app/prompts` directory
-3. Follow this format for your prompt file:
-
-```markdown
----
-title: "Your Prompt Title"
-author: "Your Name"
-authorLink: "https://your-website-or-social-profile"
-tags: ["tag1", "tag2", "category"]
-category: "Category Name"
----
-
-# Your Prompt Title
-
-Describe when to use this prompt here...
+2. Edit the `public/prompts.csv` file to add your new prompt
+3. Follow this format for your prompt entry:
 
 ```
-Your prompt content goes here. You can use markdown formatting.
+"Your Prompt Title","Your Name","https://your-website-or-social-profile","tag1,tag2,category","Category Name","Your Prompt Title","Your prompt content goes here. You can use text formatting."
 ```
+
+Make sure to properly escape any quotes in your prompt content by doubling them (e.g., `""quoted text""` instead of `"quoted text"`).
 
 4. Submit a Pull Request with your new prompt
 
