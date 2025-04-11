@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Tag } from "lucide-react"
 import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
 import {
@@ -27,11 +27,14 @@ interface TagSelectProps {
 
 export function TagSelect({ tags, selectedTag, onTagSelect, className }: TagSelectProps) {
     const [open, setOpen] = React.useState(false)
+    const [searchValue, setSearchValue] = React.useState("")
 
-    const tagItems = tags.map(tag => ({
-        value: tag.toLowerCase(),
-        label: tag
-    }))
+    const filteredTags = React.useMemo(() => {
+        if (!searchValue) return tags
+        return tags.filter((tag) =>
+            tag.toLowerCase().includes(searchValue.toLowerCase())
+        )
+    }, [tags, searchValue])
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -40,19 +43,29 @@ export function TagSelect({ tags, selectedTag, onTagSelect, className }: TagSele
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn("justify-between", className)}
+                    className={cn("justify-between h-full bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 hover:border-neutral-300 dark:hover:border-neutral-600", className)}
                 >
-                    {selectedTag
-                        ? tagItems.find((item) => item.value === selectedTag.toLowerCase())?.label
-                        : "All Tags"}
+                    <div className="flex items-center gap-2">
+                        <Tag className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
+                        <span className="text-neutral-600 dark:text-neutral-300">
+                            {selectedTag ? `#${selectedTag}` : "Filter by tag"}
+                        </span>
+                    </div>
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0" align="start">
-                <Command>
-                    <CommandInput placeholder="Search tags..." className="h-9" />
+                <Command className="rounded-lg border border-neutral-200 dark:border-neutral-800">
+                    <CommandInput
+                        placeholder="Search tags..."
+                        value={searchValue}
+                        onValueChange={setSearchValue}
+                        className="h-9"
+                    />
                     <CommandList>
-                        <CommandEmpty>No tags found.</CommandEmpty>
+                        <CommandEmpty className="py-6 text-center text-sm">
+                            No tags found
+                        </CommandEmpty>
                         <CommandGroup>
                             <CommandItem
                                 value=""
@@ -60,8 +73,12 @@ export function TagSelect({ tags, selectedTag, onTagSelect, className }: TagSele
                                     onTagSelect(null)
                                     setOpen(false)
                                 }}
+                                className="flex items-center justify-between"
                             >
-                                All Tags
+                                <div className="flex items-center">
+                                    <Tag className="mr-2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
+                                    <span>All Tags</span>
+                                </div>
                                 <Check
                                     className={cn(
                                         "ml-auto h-4 w-4",
@@ -69,20 +86,24 @@ export function TagSelect({ tags, selectedTag, onTagSelect, className }: TagSele
                                     )}
                                 />
                             </CommandItem>
-                            {tagItems.map((item) => (
+                            {filteredTags.map((tag) => (
                                 <CommandItem
-                                    key={item.value}
-                                    value={item.value}
-                                    onSelect={(currentValue) => {
-                                        onTagSelect(currentValue === selectedTag?.toLowerCase() ? null : currentValue)
+                                    key={tag}
+                                    value={tag}
+                                    onSelect={() => {
+                                        onTagSelect(tag === selectedTag ? null : tag)
                                         setOpen(false)
                                     }}
+                                    className="flex items-center justify-between"
                                 >
-                                    {item.label}
+                                    <div className="flex items-center">
+                                        <span className="text-neutral-500 dark:text-neutral-400 mr-2">#</span>
+                                        <span>{tag}</span>
+                                    </div>
                                     <Check
                                         className={cn(
                                             "ml-auto h-4 w-4",
-                                            selectedTag?.toLowerCase() === item.value ? "opacity-100" : "opacity-0"
+                                            selectedTag === tag ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>

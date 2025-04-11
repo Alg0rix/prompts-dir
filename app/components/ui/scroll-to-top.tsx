@@ -1,38 +1,42 @@
-import { useEffect, useState } from 'react';
-import { ArrowUp } from 'lucide-react';
+import { useEffect, useState } from "react"
+import { ArrowUp } from "lucide-react"
+import { cn } from "~/lib/utils"
 
-export const ScrollToTop = () => {
-    const [isVisible, setIsVisible] = useState(false);
+export function ScrollToTop() {
+    const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
         const toggleVisibility = () => {
-            // Show button when page is scrolled up to given distance
-            if (window.pageYOffset > 300) {
-                setIsVisible(true);
+            if (window.scrollY > 300) {
+                setIsVisible(true)
             } else {
-                setIsVisible(false);
+                setIsVisible(false)
             }
-        };
+        }
 
-        window.addEventListener('scroll', toggleVisibility);
-
-        return () => window.removeEventListener('scroll', toggleVisibility);
-    }, []);
+        window.addEventListener("scroll", toggleVisibility)
+        return () => window.removeEventListener("scroll", toggleVisibility)
+    }, [])
 
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth',
-        });
-    };
+            behavior: "smooth",
+        })
+    }
 
-    return isVisible ? (
+    return (
         <button
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-blue-500/25 z-50"
+            className={cn(
+                "fixed right-4 bottom-4 z-50 p-3 rounded-full shadow-lg transition-all duration-300 transform",
+                "bg-gradient-to-r from-blue-500/90 to-purple-500/90 hover:from-blue-600/90 hover:to-purple-600/90",
+                "text-white hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+            )}
             aria-label="Scroll to top"
         >
             <ArrowUp className="h-5 w-5" />
         </button>
-    ) : null;
-};
+    )
+}

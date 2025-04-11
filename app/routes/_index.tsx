@@ -1,6 +1,6 @@
 import { json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import { Search, Menu, X, Filter } from "lucide-react";
+import { Search, Menu, X, Filter, Folder } from "lucide-react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { PromptCard } from "~/components/prompt-card";
 import { getAllPrompts, getAllTags, getAllCategories, type Prompt } from "~/lib/prompts";
@@ -166,11 +166,11 @@ export default function Index() {
 
           {/* Modern search and filters bar */}
           <div className="relative z-10 max-w-3xl mx-auto">
-            <div className="p-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg">
-              <div className="flex flex-col sm:flex-row gap-2">
+            <div className="p-3 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg">
+              <div className="flex flex-col sm:flex-row gap-3">
                 {/* Search input */}
                 <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                     <Search className="h-4 w-4 text-neutral-400" />
                   </div>
                   <input
@@ -178,7 +178,7 @@ export default function Index() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search prompts by title, content, or author..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/20 dark:focus:border-blue-500 transition-shadow"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/20 dark:focus:border-blue-500 transition-shadow"
                   />
                   {searchTerm && (
                     <button
@@ -197,7 +197,7 @@ export default function Index() {
                       tags={tags}
                       selectedTag={selectedTag}
                       onTagSelect={setSelectedTag}
-                      className="w-full h-10 text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+                      className="w-full h-10 text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-xl"
                     />
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export default function Index() {
                 <div className="flex sm:hidden gap-2">
                   <button
                     onClick={() => setMobileFiltersOpen(true)}
-                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
+                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
                   >
                     <Filter className="h-4 w-4" />
                     <span>Filter</span>
@@ -215,7 +215,7 @@ export default function Index() {
 
                   <button
                     onClick={() => setMobileCategoriesOpen(true)}
-                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
+                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
                   >
                     <Menu className="h-4 w-4" />
                     <span>Categories</span>
@@ -236,63 +236,62 @@ export default function Index() {
                 prompts={prompts}
                 selectedCategory={selectedCategory}
                 onCategorySelect={setSelectedCategory}
-                className="w-full max-h-[calc(100vh-8rem)] overflow-y-auto bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-neutral-200/80 dark:border-neutral-800/80 py-4"
+                className="w-full max-h-[calc(100vh-8rem)] overflow-y-auto shadow-lg"
               />
             </div>
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 min-w-0">
             {/* Results summary */}
-            <div className="mb-6 md:mb-8 flex items-center justify-between flex-wrap gap-4 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm px-4 py-3 rounded-xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-sm">
-              <div className="text-sm text-neutral-600 dark:text-neutral-400 flex flex-wrap items-center gap-1.5">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">
+            <div className="mb-6 md:mb-8 flex items-center justify-between flex-wrap gap-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm px-5 py-4 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 shadow-sm">
+              <div className="text-sm text-neutral-600 dark:text-neutral-400 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center px-3 py-1 rounded-lg bg-gradient-to-r from-blue-500/90 to-purple-500/90 text-white font-medium">
                   {filteredPrompts.length}
                 </span>
                 prompt{filteredPrompts.length !== 1 ? "s" : ""}
+                {(selectedCategory || selectedTag || searchTerm) && (
+                  <span className="text-neutral-400 dark:text-neutral-600 ml-1">matching</span>
+                )}
                 {selectedCategory && (
-                  <>
-                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
-                    <span className="font-medium text-neutral-900 dark:text-neutral-200">{selectedCategory}</span>
-                  </>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">
+                    <Folder className="h-3.5 w-3.5" />
+                    {selectedCategory}
+                  </span>
                 )}
                 {selectedTag && (
-                  <>
-                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
-                    <span className="font-medium text-neutral-900 dark:text-neutral-200">#{selectedTag}</span>
-                  </>
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">
+                    #{selectedTag}
+                  </span>
                 )}
                 {searchTerm && (
-                  <>
-                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
-                    <span className="font-medium text-neutral-900 dark:text-neutral-200">"{searchTerm}"</span>
-                  </>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium">
+                    <Search className="h-3.5 w-3.5" />
+                    "{searchTerm}"
+                  </span>
                 )}
               </div>
 
               {/* Mobile active filters display */}
               <div className="lg:hidden flex flex-wrap gap-2">
                 {selectedCategory && (
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/50">
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/50 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                  >
+                    <Folder className="h-3.5 w-3.5" />
                     {selectedCategory}
-                    <button
-                      onClick={() => setSelectedCategory(null)}
-                      className="ml-1.5 hover:text-blue-800 dark:hover:text-blue-200"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
+                    <X className="h-3.5 w-3.5 ml-1" />
+                  </button>
                 )}
                 {selectedTag && (
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/50">
+                  <button
+                    onClick={() => setSelectedTag(null)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-100 dark:border-purple-800/50 hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+                  >
                     #{selectedTag}
-                    <button
-                      onClick={() => setSelectedTag(null)}
-                      className="ml-1.5 hover:text-blue-800 dark:hover:text-blue-200"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
+                    <X className="h-3.5 w-3.5 ml-1" />
+                  </button>
                 )}
               </div>
             </div>
