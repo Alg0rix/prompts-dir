@@ -1,7 +1,7 @@
 import { json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { Search, Menu, X, Filter } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PromptCard } from "~/components/prompt-card";
 import { getAllPrompts, getAllTags, getAllCategories, type Prompt } from "~/lib/prompts";
 import type { MetaFunction } from "@remix-run/cloudflare";
@@ -31,13 +31,61 @@ export async function loader({ context, request }: { context: any, request: Requ
 export default function Index() {
   const { prompts, tags, categories } = useLoaderData<typeof loader>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
 
+  // Memoize the filter function to prevent unnecessary recalculations
+  const filterPrompts = useCallback((prompt: Prompt) => {
+    if (!prompt.frontmatter) return false;
+
+    // Quick exit if no filters are active
+    if (!debouncedSearchTerm && !selectedTag && !selectedCategory) {
+      return true;
+    }
+
+    // Check category first (fastest check)
+    if (selectedCategory &&
+      prompt.frontmatter.category.toLowerCase() !== selectedCategory.toLowerCase()) {
+      return false;
+    }
+
+    // Then check tag (also relatively fast)
+    if (selectedTag && !prompt.frontmatter.tags.includes(selectedTag)) {
+      return false;
+    }
+
+    // Search term check last (most expensive)
+    if (debouncedSearchTerm) {
+      const searchLower = debouncedSearchTerm.toLowerCase();
+      return (
+        prompt.frontmatter.title.toLowerCase().includes(searchLower) ||
+        prompt.frontmatter.author.toLowerCase().includes(searchLower) ||
+        prompt.content.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return true;
+  }, [debouncedSearchTerm, selectedTag, selectedCategory]);
+
   // Track window width for responsive behavior
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
+  // Debounce search term with a longer delay for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Increased to 500ms for better performance
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Memoize filtered prompts to prevent unnecessary recalculations
+  const filteredPrompts = useCallback(() => {
+    return prompts.filter(filterPrompts);
+  }, [prompts, filterPrompts]);
 
   useEffect(() => {
     // Set initial window width
@@ -60,18 +108,8 @@ export default function Index() {
     }
   }, [windowWidth]);
 
-  const filteredPrompts = prompts.filter((prompt: Prompt) => {
-    const matchesSearch = searchTerm === "" ||
-      prompt.frontmatter.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      prompt.frontmatter.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      prompt.content.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesTag = selectedTag === null || prompt.frontmatter.tags.includes(selectedTag);
-    const matchesCategory = selectedCategory === null ||
-      prompt.frontmatter.category.toLowerCase() === selectedCategory.toLowerCase();
-
-    return matchesSearch && matchesTag && matchesCategory;
-  });
+  // Get the filtered prompts only when needed
+  const filteredResults = filteredPrompts();
 
   return (
     <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950/50">
