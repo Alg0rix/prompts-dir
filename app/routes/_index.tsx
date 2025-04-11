@@ -1,7 +1,7 @@
 import { json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { Search, Menu, X, Filter } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { PromptCard } from "~/components/prompt-card";
 import { getAllPrompts, getAllTags, getAllCategories, type Prompt } from "~/lib/prompts";
 import type { MetaFunction } from "@remix-run/cloudflare";
@@ -83,7 +83,7 @@ export default function Index() {
   }, [searchTerm]);
 
   // Memoize filtered prompts to prevent unnecessary recalculations
-  const filteredPrompts = useCallback(() => {
+  const filteredPrompts = useMemo(() => {
     return prompts.filter(filterPrompts);
   }, [prompts, filterPrompts]);
 
@@ -107,9 +107,6 @@ export default function Index() {
       setMobileCategoriesOpen(false);
     }
   }, [windowWidth]);
-
-  // Get the filtered prompts only when needed
-  const filteredResults = filteredPrompts();
 
   return (
     <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950/50">
