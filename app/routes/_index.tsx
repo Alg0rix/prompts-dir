@@ -8,6 +8,7 @@ import type { MetaFunction } from "@remix-run/cloudflare";
 import { TagSelect } from "~/components/ui/tag-select";
 import { CategorySidebar } from "~/components/ui/category-sidebar";
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
+import { ScrollToTop } from "~/components/ui/scroll-to-top";
 
 export const meta: MetaFunction = () => {
   return [
@@ -109,79 +110,124 @@ export default function Index() {
   }, [windowWidth]);
 
   return (
-    <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950/50">
-      <div className="container mx-auto px-4 py-8 md:py-16 lg:py-20 max-w-[1600px]">
-        <header className="mb-10 md:mb-16 text-center max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-6 bg-gradient-to-r from-neutral-950 to-neutral-700 dark:from-neutral-200 dark:to-neutral-400 bg-clip-text text-transparent">
-            Prompt Collection
-          </h1>
-          <p className="text-base md:text-xl text-neutral-600 dark:text-neutral-300 mb-6 md:mb-12 max-w-2xl mx-auto">
-            Browse, search, and discover useful prompts for various tasks
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
+      <ScrollToTop />
+      <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-[1600px]">
+        {/* Modernized Header with Hero Section */}
+        <header className="relative mb-12 md:mb-16 lg:mb-20">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-[500px] bg-gradient-to-br from-blue-50/60 via-purple-50/60 to-pink-50/60 dark:from-blue-950/40 dark:via-purple-950/40 dark:to-pink-950/40 blur-3xl opacity-70"></div>
+            <div className="absolute -top-[350px] -left-[100px] h-[600px] w-[600px] rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-500/10 dark:to-purple-500/10 blur-3xl"></div>
+            <div className="absolute -top-[150px] -right-[100px] h-[400px] w-[600px] rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10 blur-3xl"></div>
+          </div>
 
-          {/* Desktop search and filters */}
-          <div className="hidden sm:flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto p-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <Search className="h-4 w-4 text-neutral-400" />
+          <div className="max-w-4xl mx-auto mb-8 md:mb-12 relative z-10">
+            <div className="flex flex-col items-center text-center">
+              <div className="inline-flex items-center gap-1.5 mb-6 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 text-sm font-medium border border-blue-100 dark:border-blue-800/50">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                Browse, Search & Discover
               </div>
-              <input
-                type="text"
-                className="block w-full pl-9 pr-3 py-2 h-9 text-sm border border-neutral-200 rounded-lg bg-neutral-50 dark:bg-neutral-800 dark:border-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-shadow dark:focus:ring-blue-500/20 dark:focus:border-blue-500"
-                placeholder="Search prompts..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
 
-            <div className="flex-shrink-0">
-              <TagSelect
-                tags={tags}
-                selectedTag={selectedTag}
-                onTagSelect={setSelectedTag}
-                className="w-full sm:w-[180px] h-9 text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
-              />
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 leading-tight tracking-tight">
+                Prompt Collection
+              </h1>
+
+              <p className="text-lg md:text-xl lg:text-2xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto mb-8 md:mb-10">
+                Discover and utilize powerful prompts for AI assistants like ChatGPT, Claude, and Copilot
+              </p>
+
+              {/* Enhanced CTA Banner */}
+              <div className="w-full max-w-3xl mx-auto overflow-hidden rounded-2xl shadow-xl">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 p-0.5">
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE1MCAxMDBDMTUwIDEyOC4wNyAxMjguMDcgMTUwIDEwMCAxNTBDNzEuOTMgMTUwIDUwIDEyOC4wNyA1MCAxMDBDNTAgNzEuOTMgNzEuOTMgNTAgMTAwIDUwQzEyOC4wNyA1MCAxNTAgNzEuOTMgMTUwIDEwMFoiIHN0cm9rZT0idXJsKCNwYWludDBfbGluZWFyKSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtZGFzaGFycmFyeT0iNCA0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSJ3aGl0ZSIgc3RvcC1vcGFjaXR5PSIwIi8+PC9zdmc+')]"></div>
+                  <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 rounded-[calc(1rem-2px)] bg-white/95 dark:bg-neutral-900/95 p-6 md:p-8 overflow-hidden">
+                    <div className="flex-1 text-center md:text-left">
+                      <h3 className="text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+                        Want to Share Your Prompts?
+                      </h3>
+                      <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-300 max-w-lg">
+                        Join our community and contribute your own prompts to help others unlock the full potential of AI assistants
+                      </p>
+                    </div>
+                    <a
+                      href="https://github.com/Alg0rix/prompts-dir"
+                      className="inline-flex items-center justify-center px-4 md:px-6 py-3 md:py-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium text-sm md:text-base hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-600/40 hover:scale-105 active:scale-100"
+                    >
+                      Contribute Now
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Mobile search and filter buttons */}
-          <div className="sm:hidden flex flex-col gap-3 max-w-full mx-auto">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <Search className="h-4 w-4 text-neutral-400" />
+          {/* Modern search and filters bar */}
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <div className="p-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg">
+              <div className="flex flex-col sm:flex-row gap-2">
+                {/* Search input */}
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Search className="h-4 w-4 text-neutral-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search prompts by title, content, or author..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/20 dark:focus:border-blue-500 transition-shadow"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Desktop filters */}
+                <div className="hidden sm:flex gap-2">
+                  <div className="relative min-w-[160px]">
+                    <TagSelect
+                      tags={tags}
+                      selectedTag={selectedTag}
+                      onTagSelect={setSelectedTag}
+                      className="w-full h-10 text-sm bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+                    />
+                  </div>
+                </div>
+
+                {/* Mobile filter buttons */}
+                <div className="flex sm:hidden gap-2">
+                  <button
+                    onClick={() => setMobileFiltersOpen(true)}
+                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
+                  >
+                    <Filter className="h-4 w-4" />
+                    <span>Filter</span>
+                    {selectedTag && <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">1</span>}
+                  </button>
+
+                  <button
+                    onClick={() => setMobileCategoriesOpen(true)}
+                    className="flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-sm"
+                  >
+                    <Menu className="h-4 w-4" />
+                    <span>Categories</span>
+                    {selectedCategory && <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">1</span>}
+                  </button>
+                </div>
               </div>
-              <input
-                type="text"
-                className="block w-full pl-9 pr-3 py-2.5 h-10 text-sm border border-neutral-200 rounded-lg bg-white dark:bg-neutral-900 dark:border-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-shadow dark:focus:ring-blue-500/20 dark:focus:border-blue-500 shadow-sm"
-                placeholder="Search prompts..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMobileFiltersOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200 shadow-sm"
-              >
-                <Filter className="h-4 w-4" />
-                <span>Filter</span>
-                {selectedTag && <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">1</span>}
-              </button>
-
-              <button
-                onClick={() => setMobileCategoriesOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200 shadow-sm"
-              >
-                <Menu className="h-4 w-4" />
-                <span>Categories</span>
-                {selectedCategory && <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs font-medium rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">1</span>}
-              </button>
             </div>
           </div>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Desktop Category Sidebar */}
           <aside className="hidden lg:block w-64 xl:w-72 shrink-0">
             <div className="sticky top-8">
@@ -190,26 +236,44 @@ export default function Index() {
                 prompts={prompts}
                 selectedCategory={selectedCategory}
                 onCategorySelect={setSelectedCategory}
-                className="w-full max-h-[calc(100vh-8rem)] overflow-y-auto bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800 py-4"
+                className="w-full max-h-[calc(100vh-8rem)] overflow-y-auto bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-neutral-200/80 dark:border-neutral-800/80 py-4"
               />
             </div>
           </aside>
 
           {/* Main Content */}
           <main className="flex-1">
-            {/* Results count */}
-            <div className="mb-6 md:mb-8 flex items-center justify-between flex-wrap gap-4">
-              <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                <span className="font-medium text-neutral-900 dark:text-neutral-200">{filteredPrompts.length}</span> prompt{filteredPrompts.length !== 1 ? "s" : ""}
-                {selectedCategory && <span> in <span className="font-medium text-neutral-900 dark:text-neutral-200">{selectedCategory}</span></span>}
-                {selectedTag && <span> tagged <span className="font-medium text-neutral-900 dark:text-neutral-200">{selectedTag}</span></span>}
-                {searchTerm && <span> matching <span className="font-medium text-neutral-900 dark:text-neutral-200">"{searchTerm}"</span></span>}
+            {/* Results summary */}
+            <div className="mb-6 md:mb-8 flex items-center justify-between flex-wrap gap-4 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm px-4 py-3 rounded-xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-sm">
+              <div className="text-sm text-neutral-600 dark:text-neutral-400 flex flex-wrap items-center gap-1.5">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">
+                  {filteredPrompts.length}
+                </span>
+                prompt{filteredPrompts.length !== 1 ? "s" : ""}
+                {selectedCategory && (
+                  <>
+                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
+                    <span className="font-medium text-neutral-900 dark:text-neutral-200">{selectedCategory}</span>
+                  </>
+                )}
+                {selectedTag && (
+                  <>
+                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
+                    <span className="font-medium text-neutral-900 dark:text-neutral-200">#{selectedTag}</span>
+                  </>
+                )}
+                {searchTerm && (
+                  <>
+                    <span className="text-neutral-400 dark:text-neutral-600">•</span>
+                    <span className="font-medium text-neutral-900 dark:text-neutral-200">"{searchTerm}"</span>
+                  </>
+                )}
               </div>
 
               {/* Mobile active filters display */}
               <div className="lg:hidden flex flex-wrap gap-2">
                 {selectedCategory && (
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/50">
                     {selectedCategory}
                     <button
                       onClick={() => setSelectedCategory(null)}
@@ -220,8 +284,8 @@ export default function Index() {
                   </div>
                 )}
                 {selectedTag && (
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                    {selectedTag}
+                  <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800/50">
+                    #{selectedTag}
                     <button
                       onClick={() => setSelectedTag(null)}
                       className="ml-1.5 hover:text-blue-800 dark:hover:text-blue-200"
@@ -235,20 +299,29 @@ export default function Index() {
 
             {/* Prompts grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 auto-rows-fr">
-              {filteredPrompts.map((prompt: Prompt) => (
-                <PromptCard key={prompt.slug} prompt={prompt} />
+              {filteredPrompts.map((prompt: Prompt, index: number) => (
+                <div
+                  key={prompt.slug}
+                  className="animate-fadeIn"
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                    animationFillMode: 'both'
+                  }}
+                >
+                  <PromptCard prompt={prompt} />
+                </div>
               ))}
 
               {filteredPrompts.length === 0 && (
-                <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 px-4 rounded-xl md:rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
-                  <div className="bg-white dark:bg-neutral-800 rounded-full p-3 mb-4 shadow-sm">
-                    <Search className="h-5 w-5 md:h-6 md:w-6 text-neutral-400" />
+                <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 px-4 rounded-xl md:rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm">
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full p-4 mb-4 shadow-sm">
+                    <Search className="h-6 w-6 md:h-8 md:w-8 text-blue-500 dark:text-blue-400" />
                   </div>
-                  <p className="text-base md:text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                  <p className="text-lg md:text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
                     No prompts found
                   </p>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400 text-center max-w-md">
-                    Try adjusting your search or filter to find what you're looking for
+                  <p className="text-sm md:text-base text-neutral-500 dark:text-neutral-400 text-center max-w-md">
+                    Try adjusting your search criteria or removing filters to find what you're looking for
                   </p>
                 </div>
               )}

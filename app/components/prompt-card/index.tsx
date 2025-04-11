@@ -69,18 +69,24 @@ export function PromptCard({ prompt }: PromptCardProps) {
   return (
     <>
       <Card
-        className="h-full flex flex-col hover:shadow-md transition-all duration-200 cursor-pointer border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+        className="h-full flex flex-col group hover:shadow-xl transition-all duration-300 cursor-pointer border-neutral-200/80 dark:border-neutral-800/80 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm overflow-hidden hover:border-blue-200 dark:hover:border-blue-900/50 hover:shadow-blue-100 dark:hover:shadow-blue-900/5"
         onClick={() => setIsOpen(true)}
       >
-        <CardHeader className="pb-2 sm:pb-2">
-          <div className="flex flex-wrap sm:flex-nowrap justify-between items-start gap-2">
-            <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 order-1">{prompt.frontmatter.title}</CardTitle>
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xs font-medium text-neutral-600 dark:text-neutral-300 shrink-0 order-2 sm:order-2">
-              <Folder className="h-3 w-3" />
-              <span className="truncate max-w-[100px]">{prompt.frontmatter.category}</span>
-            </span>
+        {/* Card header with badge */}
+        <div className="relative">
+          <div className="absolute top-0 right-0 w-24 h-24">
+            <div className="absolute transform rotate-45 bg-gradient-to-r from-blue-500/90 to-purple-500/90 text-white text-xs font-medium py-1 right-[-35px] top-[20px] w-[150px] text-center">
+              {prompt.frontmatter.category}
+            </div>
           </div>
-          <CardDescription className="flex items-center gap-1 mt-1 text-xs sm:text-sm">
+        </div>
+
+        <CardHeader className="pb-2 pt-4">
+          <CardTitle className="text-base md:text-lg leading-tight line-clamp-2 pr-12 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {prompt.frontmatter.title}
+          </CardTitle>
+
+          <CardDescription className="flex items-center gap-1 mt-1.5 text-xs sm:text-sm">
             By {prompt.frontmatter.authorLink ? (
               <a
                 href={prompt.frontmatter.authorLink}
@@ -93,53 +99,53 @@ export function PromptCard({ prompt }: PromptCardProps) {
                 <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             ) : (
-              prompt.frontmatter.author
+              <span className="text-neutral-600 dark:text-neutral-400">{prompt.frontmatter.author}</span>
             )}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="flex-grow pt-0">
-          <div className="prose dark:prose-invert prose-sm max-h-28 sm:max-h-32 overflow-hidden relative mb-2">
-            <div dangerouslySetInnerHTML={{ __html: prompt.html }} className="text-sm text-neutral-700 dark:text-neutral-300" />
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-neutral-950 to-transparent"></div>
+          <div className="prose dark:prose-invert prose-sm max-h-24 sm:max-h-28 overflow-hidden relative mb-3">
+            <div className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-3" dangerouslySetInnerHTML={{ __html: prompt.html }} />
+            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white dark:from-neutral-900 to-transparent"></div>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="flex flex-wrap gap-1.5 mt-auto">
             {prompt.frontmatter.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+                className="inline-flex items-center rounded-full bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-200/50 dark:border-neutral-700/50 group-hover:bg-blue-50 group-hover:text-blue-700 dark:group-hover:bg-blue-900/20 dark:group-hover:text-blue-300 transition-colors"
               >
-                {tag}
+                #{tag}
               </span>
             ))}
             {prompt.frontmatter.tags.length > 3 && (
-              <span className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
+              <span className="inline-flex items-center rounded-full bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 border border-neutral-200/50 dark:border-neutral-700/50">
                 +{prompt.frontmatter.tags.length - 3}
               </span>
             )}
           </div>
         </CardContent>
 
-        <CardFooter className="pt-1 pb-3 px-3 sm:px-4 border-t border-neutral-100 dark:border-neutral-800 mt-auto">
-          <div className="flex items-center justify-between gap-1 sm:gap-2 w-full">
-            <div className="flex items-center gap-1 sm:gap-1.5">
+        <CardFooter className="pt-2 pb-4 px-4 border-t border-neutral-100 dark:border-neutral-800/50 mt-auto">
+          <div className="flex items-center justify-between gap-2 w-full">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 rounded-full bg-neutral-50 dark:bg-neutral-900"
+                className="h-8 w-8 rounded-full bg-neutral-50 dark:bg-neutral-800 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 onClick={(e) => copyToClipboard(e)}
                 title="Copy to clipboard"
               >
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-4 w-4" />
               </Button>
 
               <Select onValueChange={(value) => handleAction(value)}>
                 <SelectTrigger
-                  className="h-7 w-auto min-w-[90px] sm:min-w-[110px] text-xs rounded-full px-2 sm:px-2.5 bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800"
+                  className="h-8 w-auto min-w-[110px] text-xs rounded-full px-3 bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 hover:border-blue-300 dark:hover:border-blue-700 focus:ring-blue-500/20 dark:focus:ring-blue-500/20"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <SelectValue placeholder="Open in..." />
+                  <SelectValue placeholder="Use with..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="chatgpt">Open in ChatGPT</SelectItem>
@@ -152,11 +158,10 @@ export function PromptCard({ prompt }: PromptCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs h-7 px-2 flex items-center gap-0.5 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
-              onClick={() => setIsOpen(true)}
+              className="h-8 px-3 text-xs flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-900/20 dark:hover:text-blue-300 group/btn"
             >
-              Details
-              <ChevronRight className="h-3 w-3" />
+              <span>Details</span>
+              <ChevronRight className="h-3 w-3 group-hover/btn:translate-x-0.5 transition-transform" />
             </Button>
           </div>
         </CardFooter>
