@@ -9,10 +9,17 @@ import { toast } from "sonner";
 
 interface PromptCardProps {
   prompt: Prompt;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function PromptCard({ prompt }: PromptCardProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function PromptCard({ prompt, isOpen = false, onOpenChange }: PromptCardProps) {
+  // Use local state if no external control is provided
+  const [localIsOpen, setLocalIsOpen] = useState(false);
+
+  // Determine which state to use (controlled or uncontrolled)
+  const isModalOpen = onOpenChange !== undefined ? isOpen : localIsOpen;
+  const setModalOpen = onOpenChange !== undefined ? onOpenChange : setLocalIsOpen;
 
   // Function to create ChatGPT URL with prompt content
   const createChatGPTUrl = () => {
@@ -70,7 +77,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
     <>
       <Card
         className="group relative h-full flex flex-col hover:scale-[1.02] transition-all duration-300 cursor-pointer border-neutral-200/80 dark:border-neutral-800/80 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm overflow-hidden hover:border-blue-200 dark:hover:border-blue-900/50 hover:shadow-lg dark:hover:shadow-blue-900/10"
-        onClick={() => setIsOpen(true)}
+        onClick={() => setModalOpen(true)}
       >
         {/* Category badge with gradient */}
         <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-500/90 to-purple-500/90 text-white shadow-sm">
@@ -164,7 +171,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
       </Card>
 
       {/* Modal Dialog improvements */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="max-w-3xl w-[calc(100%-2rem)] max-h-[85vh] overflow-hidden flex flex-col bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm">
           <DialogHeader className="flex-shrink-0">
             <div className="flex flex-col gap-2">

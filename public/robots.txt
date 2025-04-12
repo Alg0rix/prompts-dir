@@ -1,0 +1,10 @@
+# Allow all user agents
+User-agent: *
+Allow: /
+
+# Disallow crawling of build/server assets if they are somehow exposed
+Disallow: /build/
+Disallow: /server/
+
+# Sitemap location
+Sitemap: https://promptllm.xyz/sitemap.xml

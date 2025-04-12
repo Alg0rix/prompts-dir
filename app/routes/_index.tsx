@@ -10,10 +10,40 @@ import { CategorySidebar } from "~/components/ui/category-sidebar";
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import { ScrollToTop } from "~/components/ui/scroll-to-top";
 
-export const meta: MetaFunction = () => {
+// Define base URL
+const BASE_URL = "https://promptllm.xyz"; // Consistent with the sitemap.xml domain
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const title = "Prompt Collection: AI Prompts for ChatGPT, Claude & More";
+  const description = "Discover, search, and share powerful AI prompts for ChatGPT, Claude, Copilot, and other assistants. Enhance your productivity with our curated prompt library.";
+  const imageUrl = `${BASE_URL}/android-chrome-512x512.png`; // Use a suitable image URL
+  const pageUrl = `${BASE_URL}/`; // URL of the current page
+
   return [
-    { title: "Prompt Collection - Browse, search, and discover useful prompts" },
-    { name: "description", content: "A curated collection of useful prompts for various tasks" },
+    { title: title },
+    { name: "description", content: description },
+    { name: "keywords", content: "AI prompts, ChatGPT prompts, Claude prompts, Copilot prompts, prompt engineering, prompt library, AI assistant prompts, generative AI" },
+
+    // Canonical URL
+    { tagName: "link", rel: "canonical", href: pageUrl },
+
+    // Open Graph / Facebook
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: pageUrl },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:image", content: imageUrl },
+
+    // Twitter Card
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:url", content: pageUrl },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: imageUrl },
+
+    // Optional: If you have a Twitter handle
+    // { name: "twitter:site", content: "@YourTwitterHandle" },
+    // { name: "twitter:creator", content: "@YourTwitterHandle" },
   ];
 };
 
@@ -29,6 +59,46 @@ export async function loader({ context, request }: { context: any, request: Requ
   });
 }
 
+// Function to generate JSON-LD structured data
+function getStructuredData(prompts: Prompt[]) {
+  const title = "Prompt Collection: AI Prompts for ChatGPT, Claude & More";
+  const description = "Discover, search, and share powerful AI prompts for ChatGPT, Claude, Copilot, and other assistants. Enhance your productivity with our curated prompt library.";
+  const pageUrl = `${BASE_URL}/`; // URL of the current page
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": title,
+    "url": pageUrl,
+    "description": description,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${pageUrl}?q={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    },
+    // Example of itemList for prompts if needed, adjust based on how prompts are displayed/structured
+    /*
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": prompts.slice(0, 5).map((prompt, index) => ({ // Example: first 5 prompts
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "CreativeWork",
+          "name": prompt.frontmatter.title,
+          "description": prompt.frontmatter.description || prompt.content.substring(0, 100) + '...', // Use frontmatter description or excerpt
+          // "url": `${pageUrl}prompt/${prompt.slug}` // If prompts have individual pages
+        }
+      }))
+    }
+    */
+  };
+  return JSON.stringify(structuredData);
+}
+
 export default function Index() {
   const { prompts, tags, categories } = useLoaderData<typeof loader>();
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +107,9 @@ export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
+
+  // State to track which prompt modal should be open
+  const [openPromptSlug, setOpenPromptSlug] = useState<string | null>(null);
 
   // Memoize the filter function to prevent unnecessary recalculations
   const filterPrompts = useCallback((prompt: Prompt) => {
@@ -90,6 +163,30 @@ export default function Index() {
       .sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
   }, [prompts, filterPrompts]);
 
+  // Generate structured data
+  const structuredDataJson = useMemo(() => getStructuredData(prompts), [prompts]);
+
+  // Check for prompt slug in URL when component mounts
+  useEffect(() => {
+    // Check if there's a prompt parameter in the URL
+    const url = new URL(window.location.href);
+    const promptSlug = url.searchParams.get('prompt');
+
+    if (promptSlug) {
+      // Find the prompt with the matching slug
+      const matchingPrompt = prompts.find(p => p.slug === promptSlug);
+      if (matchingPrompt) {
+        // Open the modal for this prompt
+        setOpenPromptSlug(promptSlug);
+
+        // Clean up the URL by removing the prompt parameter
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete('prompt');
+        window.history.replaceState({}, document.title, cleanUrl.toString());
+      }
+    }
+  }, [prompts]);
+
   useEffect(() => {
     // Set initial window width
     setWindowWidth(window.innerWidth);
@@ -113,6 +210,11 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
+      {/* Add JSON-LD Script */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: structuredDataJson }}
+      />
       <ScrollToTop />
       <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-[1600px]">
         {/* Modernized Header with Hero Section */}
@@ -346,7 +448,17 @@ export default function Index() {
                     animationFillMode: 'both'
                   }}
                 >
-                  <PromptCard prompt={prompt} />
+                  <PromptCard
+                    prompt={prompt}
+                    isOpen={openPromptSlug === prompt.slug}
+                    onOpenChange={(open) => {
+                      if (open) {
+                        setOpenPromptSlug(prompt.slug);
+                      } else if (openPromptSlug === prompt.slug) {
+                        setOpenPromptSlug(null);
+                      }
+                    }}
+                  />
                 </div>
               ))}
 
