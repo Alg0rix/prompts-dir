@@ -135,9 +135,25 @@ export default function Index() {
                 Prompt Collection
               </h1>
 
-              <p className="text-lg md:text-xl lg:text-2xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto mb-8 md:mb-10">
+              <p className="text-lg md:text-xl lg:text-2xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto mb-6 md:mb-8">
                 Discover and utilize powerful prompts for AI assistants like ChatGPT, Claude, and Copilot
               </p>
+
+              {/* GitHub Star Button */}
+              <a
+                href="https://github.com/Alg0rix/prompts-dir"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 mb-8 md:mb-10 bg-neutral-100 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full border border-neutral-200 dark:border-neutral-700 transition-all shadow-sm hover:shadow-md group"
+              >
+                <svg className="h-5 w-5 text-yellow-500 group-hover:animate-spin-slow" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+                </svg>
+                <span className="font-medium">Star on GitHub</span>
+                <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300">
+                  Support Us!
+                </span>
+              </a>
 
               {/* Enhanced CTA Banner */}
               <div className="w-full max-w-3xl mx-auto overflow-hidden rounded-2xl shadow-xl">
@@ -443,17 +459,63 @@ export default function Index() {
           </DialogContent>
         </Dialog>
 
-        {/* Footer */}
-        <footer className="mt-16 md:mt-24 text-center border-t border-neutral-200 dark:border-neutral-800 pt-8 pb-12">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            Want to contribute? Add your prompts via{" "}
-            <a
-              href="https://github.com/Alg0rix/prompts-dir"
-              className="text-blue-600 dark:text-blue-400 hover:underline hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
-            >
-              GitHub
-            </a>
-          </p>
+        {/* Enhanced Footer */}
+        <footer className="mt-16 md:mt-24 pt-12 pb-8 border-t border-neutral-200 dark:border-neutral-800">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
+              {/* About Section */}
+              <div className="col-span-1 md:col-span-1 lg:col-span-1">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">About</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+                  A community-driven collection of useful prompts for AI assistants to help you get the most out of ChatGPT, Claude, Copilot and more.
+                </p>
+                <div className="flex items-center space-x-3 mt-4">
+                  <a href="https://github.com/Alg0rix/prompts-dir" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors" aria-label="GitHub">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                    </svg>
+                  </a>
+
+                </div>
+              </div>
+
+              {/* Resources Section */}
+              <div className="col-span-1 md:col-span-1 lg:col-span-1">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Resources</h3>
+                <ul className="space-y-3 text-sm">
+                  <li>
+                    <a href="https://github.com/Alg0rix/prompts-dir/issues/new" className="text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                      Report an Issue
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+
+
+
+            </div>
+
+            {/* Bottom section with copyright */}
+            <div className="pt-8 mt-8 border-t border-neutral-200 dark:border-neutral-800">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="mb-4 md:mb-0">
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    © {new Date().getFullYear()} Prompt Collection. All rights reserved.
+                  </p>
+                </div>
+                <div className="flex flex-wrap justify-center md:justify-end gap-6">
+                  <a
+                    href="https://github.com/Alg0rix/prompts-dir"
+                    className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    Contribute on GitHub
+                  </a>
+
+                </div>
+              </div>
+            </div>
+          </div>
         </footer>
       </div>
     </div>
