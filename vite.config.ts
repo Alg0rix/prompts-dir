@@ -25,4 +25,12 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        generatedCode: 'es2015'
+      }
+    }
+  }
 });
