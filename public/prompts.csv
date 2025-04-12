@@ -549,3 +549,40 @@ Describe:
 "Parent-Teacher Conference Prep Coach","Alg0rix","https://github.com/Alg0rix","education,parent-teacher,conference,teacher","Education","Parent-Teacher Conference Coach","Provide a checklist and talking points for a teacher preparing for a parent-teacher conference about [Student Name] in [Grade Level/Class]."
 "Student Research Project Guide","Alg0rix","https://github.com/Alg0rix","education,research,student,project","Education","Research Project Guide","Outline the steps for a student research project on [Topic] for [Grade Level] students. Include guidance on question formulation, research methods, sources, and presentation."
 "Classroom SEL Activity Generator","Alg0rix","https://github.com/Alg0rix","education,sel,social-emotional,activity","Education","SEL Activity Generator","Suggest a social-emotional learning (SEL) activity for [Grade Level] students to build skills like empathy, self-awareness, or responsible decision-making."
+"3D C4D-style iconography","Alg0rix","https://github.com/Alg0rix","3d,iconography,design,visuals","Image Generation","3D C4D-style iconography","Given {input} as reference, create image with style below:
+
+Art Style Profile: Minimalist 3D Illustration, 3D C4D-style iconography
+
+Visual Elements:
+
+Shape Language: Rounded edges, smooth and soft forms with simplified geometry.
+
+Colors:
+Primary Palette: Soft beige, light gray, warm orange.
+Accent Colors: Warm orange for focal elements.
+Shading: Soft gradients with smooth transitions, avoiding harsh shadows or highlights.
+
+Lighting:
+Type: Soft, diffused lighting.
+Source Direction: Above and slightly to the right.
+Shadow Style: Subtle and diffused, no sharp or high-contrast shadows.
+
+Materials:
+Surface Texture: Matte, smooth surfaces with subtle shading.
+Reflectivity: Low to none, avoiding glossiness.
+
+Composition:
+Object Presentation: Single, central object displayed in isolation with ample negative space.
+Perspective: Slightly angled, giving a three-dimensional feel without extreme depth.
+Background: Solid, muted color that complements the object without distraction.
+
+Typography:
+Font Style: Minimalistic, sans-serif.
+Text Placement: Bottom-left corner with small, subtle text.
+Color: Gray, low-contrast against the background.
+
+Rendering Style:
+Technique: 3D render with simplified, low-poly aesthetics.
+Detail Level: Medium detail, focusing on form and color over texture or intricacy.
+
+Purpose: To create clean, aesthetically pleasing visuals that emphasize simplicity, approachability, and modernity."
