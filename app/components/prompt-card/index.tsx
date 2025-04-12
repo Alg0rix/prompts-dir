@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Prompt } from "~/lib/prompts";
-import { ExternalLink, Copy, Check, ChevronRight, Tag, Folder } from "lucide-react";
+import { ExternalLink, Copy, Check, ChevronRight, Tag, Folder, Share2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
@@ -48,6 +48,27 @@ export function PromptCard({ prompt, isOpen = false, onOpenChange }: PromptCardP
     toast("Prompt copied to clipboard!", {
       description: prompt.frontmatter.title,
       icon: <Check className="h-4 w-4" />,
+      duration: 2000,
+    });
+  };
+
+  // Function to share the prompt via a short link
+  const sharePrompt = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation(); // Prevent card click when clicking share button
+    }
+
+    // Create the share URL using the current origin and prompt slug
+    const origin = window.location.origin;
+    const shareUrl = `${origin}/?prompt=${prompt.slug}`;
+
+    // Copy the URL to clipboard
+    navigator.clipboard.writeText(shareUrl);
+
+    // Show toast notification
+    toast("Share link copied to clipboard!", {
+      description: "Send this link to share the prompt",
+      icon: <Share2 className="h-4 w-4" />,
       duration: 2000,
     });
   };
@@ -141,6 +162,16 @@ export function PromptCard({ prompt, isOpen = false, onOpenChange }: PromptCardP
                 title="Copy to clipboard"
               >
                 <Copy className="h-4 w-4" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-full bg-neutral-50 dark:bg-neutral-800 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                onClick={(e) => sharePrompt(e)}
+                title="Share prompt"
+              >
+                <Share2 className="h-4 w-4" />
               </Button>
 
               <Select onValueChange={(value) => handleAction(value)}>
@@ -247,6 +278,15 @@ export function PromptCard({ prompt, isOpen = false, onOpenChange }: PromptCardP
                 title="Copy to clipboard"
               >
                 <Copy className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 h-9 w-9 rounded-lg hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                onClick={sharePrompt}
+                title="Share prompt"
+              >
+                <Share2 className="h-4 w-4" />
               </Button>
             </div>
           </DialogFooter>
