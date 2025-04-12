@@ -47,15 +47,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
-export async function loader({ context, request }: { context: any, request: Request }) {
-  const prompts = await getAllPrompts(context.env, request);
-  const tags = getAllTags(prompts);
-  const categories = getAllCategories(prompts);
-
+export async function loader() {
   return json({
-    prompts,
-    tags,
-    categories,
+    prompts: [],
+    tags: [],
+    categories: [],
   });
 }
 
@@ -100,15 +96,98 @@ function getStructuredData(prompts: Prompt[]) {
 }
 
 export default function Index() {
-  const { prompts, tags, categories } = useLoaderData<typeof loader>();
+  const initialData = useLoaderData<typeof loader>();
+  const [prompts, setPrompts] = useState(initialData.prompts);
+  const [tags, setTags] = useState(initialData.tags);
+  const [categories, setCategories] = useState(initialData.categories); const [isLoading, setIsLoading] = useState(true); const [fetchError, setFetchError] = useState<string | null>(null);
+  const [fetchAttempts, setFetchAttempts] = useState(0);
+  const [hadSuccessfulFetch, setHadSuccessfulFetch] = useState(false);
+  const maxRetries = 3;  // Fetch data after component mounts
+  useEffect(() => {
+    let isMounted = true;
+    let abortController = new AbortController();
+
+    const fetchData = async () => {
+      // If we already have data from a successful fetch, don't show loading state
+      // This prevents NS errors from wiping out previously loaded data
+      const showLoadingState = !hadSuccessfulFetch || prompts.length === 0;
+
+      if (fetchAttempts >= maxRetries) {
+        if (showLoadingState) setIsLoading(false);
+        // Only update error if we don't have data to show
+        if (!hadSuccessfulFetch) {
+          setFetchError('Maximum retry attempts reached');
+        }
+        return;
+      }
+
+      try {
+        if (showLoadingState) setIsLoading(true);
+
+        // Only clear error if we don't have data yet
+        if (!hadSuccessfulFetch) {
+          setFetchError(null);
+        }
+
+        // Use getAllPrompts directly with the current window location
+        // This avoids making multiple fetch calls to different URLs
+        const loadedPrompts = await getAllPrompts();
+
+        if (loadedPrompts && loadedPrompts.length > 0) {
+          const loadedTags = getAllTags(loadedPrompts);
+          const loadedCategories = getAllCategories(loadedPrompts);
+
+          if (isMounted) {
+            setPrompts(loadedPrompts);
+            setTags(loadedTags);
+            setCategories(loadedCategories);
+            setFetchError(null);
+            setHadSuccessfulFetch(true);
+          }
+        } else if (!hadSuccessfulFetch) {
+          // Only throw error if we don't have any previous data
+          throw new Error('No prompts were parsed from the CSV');
+        }
+      } catch (error) {
+        console.error('Error loading prompts:', error);
+        if (isMounted) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to load prompts';
+
+          // Only update error state if we don't have any data to show
+          // This prevents NS errors from hiding previously loaded data
+          if (!hadSuccessfulFetch) {
+            setFetchError(errorMessage);
+          } else {
+            // If we have data but got an error, just log it
+            console.warn('Fetch error occurred but using previously loaded data:', errorMessage);
+          }
+
+          // Only increment attempts for non-abort errors
+          if (!(error instanceof DOMException && error.name === 'AbortError')) {
+            setFetchAttempts(prev => prev + 1);
+          }
+        }
+      } finally {
+        if (isMounted && showLoadingState) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
+  }, [fetchAttempts, hadSuccessfulFetch, prompts.length]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
-
-  // State to track which prompt modal should be open
   const [openPromptSlug, setOpenPromptSlug] = useState<string | null>(null);
 
   // Memoize the filter function to prevent unnecessary recalculations
@@ -439,30 +518,36 @@ export default function Index() {
 
             {/* Prompts grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 auto-rows-fr">
-              {filteredPrompts.map((prompt: Prompt, index: number) => (
-                <div
-                  key={prompt.slug}
-                  className="animate-fadeIn"
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                    animationFillMode: 'both'
-                  }}
-                >
-                  <PromptCard
-                    prompt={prompt}
-                    isOpen={openPromptSlug === prompt.slug}
-                    onOpenChange={(open) => {
-                      if (open) {
-                        setOpenPromptSlug(prompt.slug);
-                      } else if (openPromptSlug === prompt.slug) {
-                        setOpenPromptSlug(null);
-                      }
-                    }}
-                  />
+              {isLoading ? (
+                <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 px-4 rounded-xl md:rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm">
+                  <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-b-2 border-blue-500"></div>
+                  <p className="mt-4 text-sm md:text-base text-neutral-500 dark:text-neutral-400">
+                    Loading prompts{fetchAttempts > 0 ? ` (Attempt ${fetchAttempts + 1}/${maxRetries})` : '...'}
+                  </p>
                 </div>
-              ))}
-
-              {filteredPrompts.length === 0 && (
+              ) : fetchError ? (
+                <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 px-4 rounded-xl md:rounded-2xl border border-dashed border-red-200 dark:border-red-800/50 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm">
+                  <div className="bg-red-50 dark:bg-red-900/30 rounded-full p-4 mb-4">
+                    <svg className="h-6 w-6 md:h-8 md:w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <p className="text-lg md:text-xl font-semibold text-red-600 dark:text-red-400 mb-2">
+                    Error Loading Prompts
+                  </p>
+                  <p className="text-sm md:text-base text-neutral-500 dark:text-neutral-400 text-center max-w-md mb-4">
+                    {fetchError}
+                  </p>
+                  {fetchAttempts < maxRetries && (
+                    <button
+                      onClick={() => setFetchAttempts(prev => prev + 1)}
+                      className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors text-sm font-medium"
+                    >
+                      Retry Loading
+                    </button>
+                  )}
+                </div>
+              ) : filteredPrompts.length === 0 && !isLoading && !fetchError ? (
                 <div className="col-span-full flex flex-col items-center justify-center py-12 md:py-16 px-4 rounded-xl md:rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm">
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full p-4 mb-4 shadow-sm">
                     <Search className="h-6 w-6 md:h-8 md:w-8 text-blue-500 dark:text-blue-400" />
@@ -474,6 +559,29 @@ export default function Index() {
                     Try adjusting your search criteria or removing filters to find what you're looking for
                   </p>
                 </div>
+              ) : (
+                filteredPrompts.map((prompt: Prompt, index: number) => (
+                  <div
+                    key={prompt.slug}
+                    className="animate-fadeIn"
+                    style={{
+                      animationDelay: `${index * 50}ms`,
+                      animationFillMode: 'both'
+                    }}
+                  >
+                    <PromptCard
+                      prompt={prompt}
+                      isOpen={openPromptSlug === prompt.slug}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          setOpenPromptSlug(prompt.slug);
+                        } else if (openPromptSlug === prompt.slug) {
+                          setOpenPromptSlug(null);
+                        }
+                      }}
+                    />
+                  </div>
+                ))
               )}
             </div>
           </main>

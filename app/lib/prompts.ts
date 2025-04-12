@@ -111,73 +111,119 @@ function parseCSVRow(row: string): string[] {
   return values;
 }
 
+// Cache for getAllPrompts requests
+let promptsCache: {
+  data: Prompt[] | null;
+  timestamp: number;
+  promise: Promise<Prompt[]> | null;
+} = {
+  data: null,
+  timestamp: 0,
+  promise: null,
+};
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export async function getAllPrompts(env?: any, request?: Request): Promise<Prompt[]> {
-  let csvContent: string;
-
-  // Use different methods to fetch the CSV based on the environment
-  if (env && env.ASSETS) {
-    // In Cloudflare Pages environment, use env.ASSETS.fetch()
-    const response = await env.ASSETS.fetch(csvPath);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch CSV: ${response.status}`);
-    }
-    csvContent = await response.text();
-  } else {
-    // Fallback for development environment - use the request URL as base
-    try {
-      // Get the base URL from the request
-      let baseUrl: string;
-      if (request && request.url) {
-        // Extract the origin (protocol + hostname + port) from the request URL
-        const url = new URL(request.url);
-        baseUrl = url.origin;
-      } else {
-        // Fallback if no request is available
-        baseUrl = "http://localhost:3000";
-      }
-
-      // Create the full URL to the CSV file
-      const csvUrl = new URL(csvPath, baseUrl).toString();
-
-      const response = await fetch(csvUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch CSV: ${response.status}`);
-      }
-      csvContent = await response.text();
-    } catch (error) {
-      console.error("Error fetching CSV file:", error);
-      throw error;
-    }
+  // If there's an ongoing request, return its promise
+  if (promptsCache.promise) {
+    return promptsCache.promise;
   }
 
-  // Parse the CSV content using our custom parser
-  const records = parseCSV(csvContent);
+  // If we have cached data that's not expired, return it
+  if (promptsCache.data && Date.now() - promptsCache.timestamp < CACHE_TTL) {
+    return promptsCache.data;
+  }
 
-  const prompts = await Promise.all(records.map(async (record: any) => {
-    // Generate slug from title
-    const slug = record.title
-      .toLowerCase()
-      .replace(/[^\w\s]/g, "")
-      .replace(/\s+/g, "-");
+  // Create a new promise for the request
+  promptsCache.promise = (async () => {
+    let csvContent: string;
 
-    // Parse tags as an array
-    const tags = record.tags ? record.tags.split(',') : [];
+    try {
+      // Use different methods to fetch the CSV based on the environment
+      if (env && env.ASSETS) {
+        // In Cloudflare Pages environment, use env.ASSETS.fetch()
+        const response = await env.ASSETS.fetch(csvPath);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch CSV: ${response.status}`);
+        }
+        csvContent = await response.text();
+      } else {
+        // Fallback for development environment - use browser URL or window location if available
+        // Get the base URL from the current environment
+        let baseUrl: string;
+        if (request && request.url) {
+          // Extract the origin (protocol + hostname + port) from the request URL
+          const url = new URL(request.url);
+          baseUrl = url.origin;
+        } else if (typeof window !== 'undefined') {
+          // Use current window location if in browser environment
+          baseUrl = window.location.origin;
+        } else {
+          // Last resort fallback
+          baseUrl = "http://localhost:5173";
+        }
 
-    return {
-      slug,
-      frontmatter: {
-        title: record.title || slug,
-        author: record.author || "Anonymous",
-        authorLink: record.authorLink || null,
-        category: record.category || "General",
-        tags: tags,
-      },
-      content: record.promptContent,
-      html: await marked(record.promptContent),
-    };
-  }));
+        // Create the full URL to the CSV file
+        const csvUrl = new URL(csvPath, baseUrl).toString();
 
-  return prompts;
+        const response = await fetch(csvUrl, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch CSV: ${response.status}`);
+        }
+        csvContent = await response.text();
+      }
+
+      // Parse the CSV content using our custom parser
+      const records = parseCSV(csvContent);
+
+      const prompts = await Promise.all(records.map(async (record: any) => {
+        // Generate slug from title
+        const slug = record.title
+          .toLowerCase()
+          .replace(/[^\w\s]/g, "")
+          .replace(/\s+/g, "-");
+
+        // Parse tags as an array
+        const tags = record.tags ? record.tags.split(',') : [];
+
+        return {
+          slug,
+          frontmatter: {
+            title: record.title || slug,
+            author: record.author || "Anonymous",
+            authorLink: record.authorLink || null,
+            category: record.category || "General",
+            tags: tags,
+          },
+          content: record.promptContent,
+          html: await marked(record.promptContent),
+        };
+      }));
+
+      // Update cache with new data
+      promptsCache.data = prompts;
+      promptsCache.timestamp = Date.now();
+      return prompts;
+    } catch (error) {
+      // Clear cache on error
+      promptsCache.data = null;
+      promptsCache.timestamp = 0;
+      throw error;
+    } finally {
+      // Clear the promise reference
+      promptsCache.promise = null;
+    }
+  })();
+
+  return promptsCache.promise;
 }
 
 export function getAllTags(prompts: Prompt[]): string[] {
