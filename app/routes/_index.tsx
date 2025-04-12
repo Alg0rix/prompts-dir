@@ -141,21 +141,42 @@ export default function Index() {
                 Discover and utilize powerful prompts for AI assistants like ChatGPT, Claude, and Copilot
               </p>
 
-              {/* GitHub Star Button */}
-              <a
-                href="https://github.com/Alg0rix/prompts-dir"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 mb-8 md:mb-10 bg-neutral-100 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-full border border-neutral-200 dark:border-neutral-700 transition-all shadow-sm hover:shadow-md group"
-              >
-                <svg className="h-5 w-5 text-yellow-500 group-hover:animate-spin-slow" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
-                </svg>
-                <span className="font-medium">Star on GitHub</span>
-                <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300">
-                  Support Us!
-                </span>
-              </a>
+              {/* Side by side buttons container */}
+              <div className="w-full max-w-3xl mx-auto mb-8 md:mb-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Learn Prompt Engineering Button - Column 1 */}
+                <div className="w-full">
+                  <a
+                    href="https://docs.promptllm.xyz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center h-full gap-3 px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500/90 to-purple-500/90 text-white hover:from-indigo-600 hover:to-purple-600 shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] group"
+                  >
+                    <span className="text-xl font-bold">✨</span>
+                    <span className="font-semibold">Learn Prompt Engineering</span>
+                    <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </a>
+                </div>
+
+                {/* GitHub Star Button - Column 2 */}
+                <div className="w-full">
+                  <a
+                    href="https://github.com/Alg0rix/prompts-dir"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center h-full gap-2 px-5 py-3 bg-neutral-100 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-all shadow-sm hover:shadow-md group"
+                  >
+                    <svg className="h-5 w-5 text-yellow-500 group-hover:animate-spin-slow" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+                    </svg>
+                    <span className="font-medium">Star on GitHub</span>
+                    <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300">
+                      Support Us!
+                    </span>
+                  </a>
+                </div>
+              </div>
 
               {/* Enhanced CTA Banner */}
               <div className="w-full max-w-3xl mx-auto overflow-hidden rounded-2xl shadow-xl">
@@ -488,6 +509,11 @@ export default function Index() {
                   <li>
                     <a href="https://github.com/Alg0rix/prompts-dir/issues/new" className="text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                       Report an Issue
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://docs.promptllm.xyz" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                      Learn Prompt Engineering
                     </a>
                   </li>
                 </ul>
