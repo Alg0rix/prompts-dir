@@ -85,7 +85,9 @@ export default function Index() {
 
   // Memoize filtered prompts to prevent unnecessary recalculations
   const filteredPrompts = useMemo(() => {
-    return prompts.filter(filterPrompts);
+    return prompts
+      .filter(filterPrompts)
+      .sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
   }, [prompts, filterPrompts]);
 
   useEffect(() => {
